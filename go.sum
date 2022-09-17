@@ -24,6 +24,8 @@ github.com/edouard127/mc-go-1.12.2 v1.0.2-0.20220917001453-6868163fef11 h1:y+qDa
 github.com/edouard127/mc-go-1.12.2 v1.0.2-0.20220917001453-6868163fef11/go.mod h1:oihMM1qMWJ4eqEZC6opWKhQ6gzGkeQtlZtZIgk3r+IM=
 github.com/edouard127/mc-go-1.12.2 v1.0.2-0.20220917001630-dee394678ec5 h1:GVwH0JWmmmHao2nQIYPVi83bQ0y9vsPrrg/sAgb87Nw=
 github.com/edouard127/mc-go-1.12.2 v1.0.2-0.20220917001630-dee394678ec5/go.mod h1:oihMM1qMWJ4eqEZC6opWKhQ6gzGkeQtlZtZIgk3r+IM=
+github.com/edouard127/mc-go-1.12.2 v1.0.2-0.20220917013702-ebd8dd322b4a h1:EEvY2Q9siG91P7vD8xOPRw3AiAG0iNuIg3jT230jcrI=
+github.com/edouard127/mc-go-1.12.2 v1.0.2-0.20220917013702-ebd8dd322b4a/go.mod h1:oihMM1qMWJ4eqEZC6opWKhQ6gzGkeQtlZtZIgk3r+IM=
 github.com/fatih/color v1.13.0 h1:8LOYc1KYPPmyKMuN8QV2DNRWNbLo6LZ0iLs8+mlH53w=
 github.com/fatih/color v1.13.0/go.mod h1:kLAiJbzzSOZDVNGyDpeOxJ47H46qBXwg5ILebYFFOfk=
 github.com/mattn/go-colorable v0.1.9 h1:sqDoxXbdeALODt0DAeJCVp38ps9ZogZEAXjus69YV3U=

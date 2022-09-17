@@ -41,8 +41,11 @@ func Join(c *Auth) {
 		case JoinGameEvent:
 			fmt.Printf("Joined game as %v\n", c.Name)
 		case ChatMessageEvent:
-			queue.ParseString(e.(ChatMessageEvent).Msg.String())
-			fmt.Printf("Queue position: %v\n", queue.Position)
+			if game.Server.Addr == "connect.2b2t.org" {
+				queue.ParseString(e.(ChatMessageEvent).Msg.String())
+				fmt.Printf("Queue position: %v\n", queue.Position)
+			}
+			fmt.Println(e.(ChatMessageEvent).Msg.String())
 		case DisconnectEvent:
 			fmt.Printf("Disconnected: %v\n", e.(DisconnectEvent).Text)
 		case TitleEvent:

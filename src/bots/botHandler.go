@@ -7,11 +7,9 @@ import (
 	"kamigen/2fucked2pay/src/utils"
 	"log"
 	"runtime"
-	"time"
 )
 
 var (
-	date    = time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), time.Now().Hour(), time.Now().Minute(), time.Now().Second(), time.Now().Nanosecond(), time.Local)
 	address = flag.String("address", "127.0.0.1", "The server address")
 )
 
@@ -41,11 +39,18 @@ func Join(c *Auth) {
 		case JoinGameEvent:
 			fmt.Printf("Joined game as %v\n", c.Name)
 		case ChatMessageEvent:
+			chat := e.(ChatMessageEvent)
 			if game.Server.Addr == "connect.2b2t.org" {
-				queue.ParseString(e.(ChatMessageEvent).Msg.String())
+				queue.ParseString(chat.Content)
 				fmt.Printf("Queue position: %v\n", queue.Position)
 			}
-			fmt.Println(e.(ChatMessageEvent).Msg.String())
+			if len(chat.Sender) > 0 {
+				fmt.Printf("<%v> %v\n", chat.Sender, chat.Content)
+				utils.LogFile(chat.RawString)
+			} else {
+				fmt.Printf("%v\n", chat.Content)
+				utils.LogFile(chat.RawString)
+			}
 		case DisconnectEvent:
 			fmt.Printf("Disconnected: %v\n", e.(DisconnectEvent).Text)
 		case TitleEvent:

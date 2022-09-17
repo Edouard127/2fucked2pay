@@ -10,7 +10,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	bot "github.com/edouard127/mc-go-1.12.2"
+	bot "github.com/edouard127/mc-go-1.12.2/struct"
 	"io/ioutil"
 	"log"
 	"net/http"

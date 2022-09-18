@@ -7,6 +7,7 @@ import (
 	"kamigen/2fucked2pay/src/utils"
 	"log"
 	"runtime"
+	"sync"
 )
 
 var (
@@ -15,9 +16,16 @@ var (
 )
 
 func Join(c *Auth) {
+	var wg sync.WaitGroup
+	wg.Add(1)
 	flag.Parse()
 
 	//Login
+	err := c.PingServer(*address, *port, &wg)
+	if err != nil {
+		fmt.Printf("Ping server fail: %v", err)
+	}
+	wg.Wait()
 	game, err := c.JoinServer(*address, *port)
 	if err != nil {
 		log.Fatal(err)

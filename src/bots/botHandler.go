@@ -27,35 +27,48 @@ func Join(c *Auth) {
 		Position: 0,
 	}
 	events := game.GetEvents()
+	motions := game.Motion
 	go func() {
 		err := game.HandleGame()
 		if err != nil {
 			log.Fatal(err)
 		}
 	}()
-
-	for e := range events { //Receiving events
-		switch e.(type) {
+	for e := range events {
+		switch event := e.(type) {
 		case JoinGameEvent:
 			fmt.Printf("Joined game as %v\n", c.Name)
 		case ChatMessageEvent:
-			chat := e.(ChatMessageEvent)
 			if game.Server.Addr == "connect.2b2t.org" {
-				queue.ParseString(chat.Content)
+				queue.ParseString(event.Content)
 				fmt.Printf("Queue position: %v\n", queue.Position)
 			}
-			if len(chat.Sender) > 0 {
-				fmt.Printf("<%v> %v\n", chat.Sender, chat.Content)
-				utils.LogFile(chat.RawString)
+			if len(event.Sender) > 0 {
+				fmt.Printf("<%v> %v\n", event.Sender, event.Content)
+				ParseCommands(game, event.Content)
 			} else {
-				fmt.Printf("%v\n", chat.Content)
-				utils.LogFile(chat.RawString)
+				fmt.Printf("%v\n", event.Content)
 			}
 		case DisconnectEvent:
-			fmt.Printf("Disconnected: %v\n", e.(DisconnectEvent).Text)
+			fmt.Printf("Disconnected: %v\n", event.Text)
 		case TitleEvent:
 			//fmt.Printf("Title: %v\n", e.(bot.TitleEvent).Text)
+		case TimeUpdateEvent:
+			// https://static.wikia.nocookie.net/minecraft_gamepedia/images/b/bc/Day_Night_Clock_24h.png
+			switch event.Time.TimeOfDay {
+			case 22500:
+				game.Chat("Good morning cubic world!")
+			case 12000:
+				game.Chat("It's time to eat dinner! It's 6:00 PM!")
+			case 13000:
+				game.Chat("If you are muslim, you can eat now! It's 9:00 PM!")
+			case 18000:
+				game.Chat("It's midnight, If you want to be pounded by 14 werewolves, It's the time!")
+			}
 		}
+	}
+	for m := range motions {
+		m()
 	}
 }
 

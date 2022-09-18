@@ -59,6 +59,12 @@ func ParseCommands(g *Game, s string) {
 			g.SwingHand(false)
 		case "jump":
 			g.TweenJump()
+		case "slot":
+			for i, item := range g.GetPlayer().Inventory {
+				if item.Count == 64 {
+					g.Chat("Slot " + strconv.Itoa(i) + " is full")
+				}
+			}
 		}
 	}
 }

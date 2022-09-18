@@ -45,13 +45,15 @@ func ParseCommands(g *Game, s string) {
 				}
 			}
 		case "closest":
-			e := g.ClosestEntity(20)
+			e := g.ClosestEntity(60)
 			if e != nil {
 				g.Chat("Closest entity: " + string((e).ID))
 				g.Attack(e)
 			} else {
 				g.Chat("No entities found")
 			}
+		case "eat":
+			g.Eat()
 		case "swing":
 			g.SwingHand(true)
 			g.SwingHand(false)

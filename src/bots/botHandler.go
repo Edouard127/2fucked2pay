@@ -27,6 +27,7 @@ func Join(c *Auth) {
 	queue := utils.Queue{
 		Position: 0,
 	}
+	ticks := 0
 	events := game.GetEvents()
 	motions := game.Motion
 	go func() {
@@ -50,6 +51,7 @@ func Join(c *Auth) {
 			} else {
 				fmt.Printf("%v\n", event.Content)
 			}
+			utils.LogFile(event.RawString)
 		case DisconnectEvent:
 			fmt.Printf("Disconnected: %v\n", event.Text)
 		case TitleEvent:
@@ -65,6 +67,14 @@ func Join(c *Auth) {
 				game.Chat("If you are muslim, you can eat now! It's 9:00 PM!")
 			case 18000:
 				game.Chat("It's midnight, If you want to be pounded by 14 werewolves, It's the time!")
+			}
+		case TickEvent:
+			// Execute at every 100 ticks
+			ticks++
+			if ticks%100 == 0 {
+				// Anti-AFK
+				game.SwingHand(true)
+				ticks = 0
 			}
 		}
 	}

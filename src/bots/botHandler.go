@@ -71,10 +71,12 @@ func Join(c *Auth) {
 		case TickEvent:
 			// Execute at every 100 ticks
 			ticks++
+			// Switch ticks%100 == 0
 			if ticks%100 == 0 {
-				// Anti-AFK
 				game.SwingHand(true)
-				ticks = 0
+			}
+			if ticks%6000 == 0 {
+				game.Chat("This bot is running on golang, and it's open source! https://github.com/Edouard127/mc-go-1.12.2")
 			}
 		}
 	}

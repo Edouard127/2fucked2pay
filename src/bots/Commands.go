@@ -9,7 +9,7 @@ import (
 )
 
 func ParseCommands(g *Game, s string) {
-	if strings.HasPrefix(string(s[0]), "!") {
+	if strings.HasPrefix(string(s[0]), "!") && g.Server.Addr == "127.0.0.1" /* <-- Avoid people using commands */ {
 		s = strings.TrimPrefix(s, "!")
 		s = strings.ToLower(s)
 		split := strings.Split(s, " ")

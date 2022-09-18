@@ -11,13 +11,14 @@ import (
 
 var (
 	address = flag.String("address", "127.0.0.1", "The server address")
+	port    = flag.Int("port", 25565, "The server port")
 )
 
 func Join(c *Auth) {
 	flag.Parse()
 
 	//Login
-	game, err := c.JoinServer(*address, 25565)
+	game, err := c.JoinServer(*address, *port)
 	if err != nil {
 		log.Fatal(err)
 	}

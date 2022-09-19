@@ -37,13 +37,14 @@ func Join(c *Auth) {
 	}
 	ticks := 0
 	events := game.GetEvents()
-	motions := game.Motion
+	motion := game.Motion
 	go func() {
 		err := game.HandleGame()
 		if err != nil {
 			log.Fatal(err)
 		}
 	}()
+
 	for e := range events {
 		switch event := e.(type) {
 		case JoinGameEvent:
@@ -54,10 +55,10 @@ func Join(c *Auth) {
 				fmt.Printf("Queue position: %v\n", queue.Position)
 			}
 			if len(event.Sender) > 0 {
-				fmt.Printf("<%v> %v\n", event.Sender, event.Content)
+				fmt.Printf("%s%s\n", event.Sender, event.Content)
 				ParseCommands(game, event.Content)
 			} else {
-				fmt.Printf("%v\n", event.Content)
+				fmt.Printf("%s\n", event.Content)
 			}
 			utils.LogFile(event.RawString)
 		case DisconnectEvent:
@@ -83,13 +84,13 @@ func Join(c *Auth) {
 			if ticks%100 == 0 {
 				game.SwingHand(true)
 			}
-			if ticks%6000 == 0 {
+			if ticks%12000 == 0 {
 				game.Chat("This bot is running on golang, and it's open source! https://github.com/Edouard127/mc-go-1.12.2")
 			}
 		}
 	}
-	for m := range motions {
-		m()
+	for f := range motion {
+		f()
 	}
 }
 

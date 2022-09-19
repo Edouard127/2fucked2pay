@@ -1,8 +1,8 @@
 package bots
 
 import (
-	"fmt"
 	"github.com/edouard127/mc-go-1.12.2/PathFinding"
+	. "github.com/edouard127/mc-go-1.12.2/maths"
 	. "github.com/edouard127/mc-go-1.12.2/struct"
 	"strconv"
 	"strings"
@@ -16,7 +16,6 @@ func ParseCommands(g *Game, s string) {
 		switch split[0] {
 		case "goto":
 			if len(split) == 4 {
-				fmt.Println(g.GetPlayer().X, g.GetPlayer().Y, g.GetPlayer().Z)
 				pos := g.GetPlayer().Position
 				x, _ := strconv.ParseFloat(split[1], 64)
 				y, _ := strconv.ParseFloat(split[2], 64)
@@ -45,13 +44,7 @@ func ParseCommands(g *Game, s string) {
 				}
 			}
 		case "closest":
-			e := g.ClosestEntity(60)
-			if e != nil {
-				g.Chat("Closest entity: " + string((e).ID))
-				g.Attack(e)
-			} else {
-				g.Chat("No entities found")
-			}
+			g.LookYawPitch(0, 90)
 		case "eat":
 			g.Eat()
 		case "swing":

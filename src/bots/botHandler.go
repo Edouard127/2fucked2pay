@@ -87,6 +87,12 @@ func Join(c *Auth) {
 			if ticks%12000 == 0 {
 				game.Chat("This bot is running on golang, and it's open source! https://github.com/Edouard127/mc-go-1.12.2")
 			}
+		case EntityRelativeMoveEvent:
+			e := game.World.ClosestEntity(game.Player.GetPosition(), 50)
+			if e != nil {
+				game.LookAt(e.Position)
+				game.SwingHand(true)
+			}
 		}
 	}
 	for f := range motion {

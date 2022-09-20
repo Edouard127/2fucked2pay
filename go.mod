@@ -3,7 +3,7 @@ module kamigen/2fucked2pay
 go 1.19
 
 require (
-	github.com/edouard127/mc-go-1.12.2 v1.0.2-0.20220919003720-2406fd4b9d5e
+	github.com/edouard127/mc-go-1.12.2 v1.0.2-0.20220919232951-cc1ffae9d920
 	github.com/fatih/color v1.13.0
 )
 

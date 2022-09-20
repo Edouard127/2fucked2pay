@@ -84,6 +84,11 @@ func Join(c *Auth) {
 			if ticks%100 == 0 {
 				game.SwingHand(true)
 			}
+			if ticks%6000 == 0 {
+				// Send the RAM usage in chat
+				alloc, _, numGC := GetMemoryUsage()
+				game.Chat(fmt.Sprintf("This epic bot made in Go is currently using %v MiB and the GC cleaned the bot %v times. Want to help this project ? https://github.com/Edouard127/mc-go-1.12.2", alloc, numGC))
+			}
 			if ticks%12000 == 0 {
 				game.Chat("This bot is running on golang, and it's open source! https://github.com/Edouard127/mc-go-1.12.2")
 			}
@@ -100,14 +105,15 @@ func Join(c *Auth) {
 	}
 }
 
-func GetMemoryUsage() {
+func GetMemoryUsage() (uint64, uint64, uint32) {
 	var m runtime.MemStats
 	runtime.ReadMemStats(&m)
 	// For info on each, see: https://golang.org/pkg/runtime/#MemStats
-	fmt.Printf("Alloc = %v MiB", bToMb(m.Alloc))
+	/*fmt.Printf("Alloc = %v MiB", bToMb(m.Alloc))
 	fmt.Printf("\tTotalAlloc = %v MiB", bToMb(m.TotalAlloc))
 	fmt.Printf("\tSys = %v MiB", bToMb(m.Sys))
-	fmt.Printf("\tNumGC = %v\n", m.NumGC)
+	fmt.Printf("\tNumGC = %v\n", m.NumGC)*/
+	return bToMb(m.Alloc), bToMb(m.TotalAlloc), m.NumGC
 }
 func bToMb(b uint64) uint64 {
 	return b / 1024 / 1024

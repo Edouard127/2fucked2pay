@@ -6,6 +6,7 @@ import (
 	. "github.com/edouard127/mc-go-1.12.2/struct"
 	"kamigen/2fucked2pay/src/utils"
 	"log"
+	"math/rand"
 	"runtime"
 	"sync"
 )
@@ -81,23 +82,23 @@ func Join(c *Auth) {
 			// Execute at every 100 ticks
 			ticks++
 			// Switch ticks%100 == 0
-			if ticks%100 == 0 {
+			if ticks%200 == 0 {
+				// Random yaw and pitch
+				yaw := RandomFloat64(-180, 180)
+				pitch := RandomFloat64(-90, 90)
+				game.LookYawPitch(float32(yaw), float32(pitch), true)
 				game.SwingHand(true)
 			}
 			if ticks%6000 == 0 {
-				// Send the RAM usage in chat
-				alloc, _, numGC := GetMemoryUsage()
-				game.Chat(fmt.Sprintf("This epic bot made in Go is currently using %v MiB and the GC cleaned the bot %v times. Want to help this project ? https://github.com/Edouard127/mc-go-1.12.2", alloc, numGC))
+				alloc, _, _ := GetMemoryUsage()
+				game.Chat(fmt.Sprintf("> This bot is running on golang, using %v MiB of RAM and it's open source! https://github.com/Edouard127/mc-go-1.12.2 Contribute today %s !", alloc, RandomOwO()))
 			}
-			if ticks%12000 == 0 {
-				game.Chat("This bot is running on golang, and it's open source! https://github.com/Edouard127/mc-go-1.12.2")
-			}
-		case EntityRelativeMoveEvent:
+			/*case EntityRelativeMoveEvent:
 			e := game.World.ClosestEntity(game.Player.GetPosition(), 50)
 			if e != nil {
 				game.LookAt(e.Position)
 				game.SwingHand(true)
-			}
+			}*/
 		}
 	}
 	for f := range motion {
@@ -117,4 +118,13 @@ func GetMemoryUsage() (uint64, uint64, uint32) {
 }
 func bToMb(b uint64) uint64 {
 	return b / 1024 / 1024
+}
+
+func RandomFloat64(min, max float64) float64 {
+	return min + rand.Float64()*(max-min)
+}
+
+func RandomOwO() string {
+	owo := []string{"OwO", "UwU", "OvO", "UvU", "OwU", "UwO", "OvU", "UvO"}
+	return owo[rand.Intn(len(owo))]
 }

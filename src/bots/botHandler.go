@@ -9,6 +9,7 @@ import (
 	"math/rand"
 	"runtime"
 	"sync"
+	"time"
 )
 
 var (
@@ -21,12 +22,6 @@ func Join(c *Auth) {
 	wg.Add(1)
 	flag.Parse()
 
-	//Login
-	err := c.PingServer(*address, *port, &wg)
-	if err != nil {
-		fmt.Printf("Ping server fail: %v", err)
-	}
-	wg.Wait()
 	game, err := c.JoinServer(*address, *port)
 	if err != nil {
 		log.Fatal(err)
@@ -36,13 +31,38 @@ func Join(c *Auth) {
 	queue := utils.Queue{
 		Position: 0,
 	}
-	ticks := 0
 	events := game.GetEvents()
 	motion := game.Motion
 	go func() {
 		err := game.HandleGame()
 		if err != nil {
 			log.Fatal(err)
+		}
+	}()
+	go func() {
+		ticks := 0
+		for {
+			time.Sleep(50 * time.Millisecond)
+			// Execute at every 100 ticks
+			ticks++
+			// Switch ticks%100 == 0
+			if ticks%60 == 0 {
+				// Random yaw and pitch
+				yaw := RandomFloat64(-180, 180)
+				pitch := RandomFloat64(-90, 90)
+				game.LookYawPitch(float32(yaw), float32(pitch), true)
+				game.TweenJump()
+				game.SwingHand(true)
+			}
+			if ticks%6000 == 0 {
+				game.Chat(RandomStr())
+			}
+			/*case EntityRelativeMoveEvent:
+			e := game.World.ClosestEntity(game.Player.GetPosition(), 50)
+			if e != nil {
+				game.LookAt(e.Position)
+				game.SwingHand(true)
+			}*/
 		}
 	}()
 
@@ -78,27 +98,6 @@ func Join(c *Auth) {
 			case 18000:
 				game.Chat("It's midnight, If you want to be pounded by 14 werewolves, It's the time!")
 			}
-		case TickEvent:
-			// Execute at every 100 ticks
-			ticks++
-			// Switch ticks%100 == 0
-			if ticks%200 == 0 {
-				// Random yaw and pitch
-				yaw := RandomFloat64(-180, 180)
-				pitch := RandomFloat64(-90, 90)
-				game.LookYawPitch(float32(yaw), float32(pitch), true)
-				game.SwingHand(true)
-			}
-			if ticks%6000 == 0 {
-				alloc, _, _ := GetMemoryUsage()
-				game.Chat(fmt.Sprintf("> This bot is running on golang, using %v MiB of RAM and it's open source! https://github.com/Edouard127/mc-go-1.12.2 Contribute today %s !", alloc, RandomOwO()))
-			}
-			/*case EntityRelativeMoveEvent:
-			e := game.World.ClosestEntity(game.Player.GetPosition(), 50)
-			if e != nil {
-				game.LookAt(e.Position)
-				game.SwingHand(true)
-			}*/
 		}
 	}
 	for f := range motion {
@@ -116,6 +115,10 @@ func GetMemoryUsage() (uint64, uint64, uint32) {
 	fmt.Printf("\tNumGC = %v\n", m.NumGC)*/
 	return bToMb(m.Alloc), bToMb(m.TotalAlloc), m.NumGC
 }
+func alloc() uint64 {
+	alloc, _, _ := GetMemoryUsage()
+	return alloc
+}
 func bToMb(b uint64) uint64 {
 	return b / 1024 / 1024
 }
@@ -127,4 +130,14 @@ func RandomFloat64(min, max float64) float64 {
 func RandomOwO() string {
 	owo := []string{"OwO", "UwU", "OvO", "UvU", "OwU", "UwO", "OvU", "UvO"}
 	return owo[rand.Intn(len(owo))]
+}
+
+func RandomStr() string {
+	s := []string{
+		fmt.Sprintf("> This bot is running on golang, using %v MiB of RAM and it's open source! https://github.com/Edouard127/mc-go-1.12.2 Contribute today %s !", alloc(), RandomOwO()),
+		fmt.Sprintf("> Are you a Go developer? Contribute to this project! https://github.com/Edouard127/mc-go-1.12.2 %s", RandomOwO()),
+		fmt.Sprintf("> Are you a Minecraft expert? Contribute to this project! https://github.com/Edouard127/mc-go-1.12.2 %s", RandomOwO()),
+		fmt.Sprintf("> Would you like to have bots building highways for you? Contribute to this project! https://github.com/Edouard127/mc-go-1.12.2 %s", RandomOwO()),
+	}
+	return s[rand.Intn(len(s))]
 }
